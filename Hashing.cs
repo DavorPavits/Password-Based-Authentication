@@ -3,6 +3,7 @@
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Text;
+using System.Diagnostics;
 
 public class Hashing {
   const int salt_bitsize = 64;
@@ -36,8 +37,14 @@ public class Hashing {
   // hashSHA256() - hashing of the password and the salt
 
   private string hashSHA256(string password, string saltstring) {
+        Stopwatch stopwatch = new Stopwatch();
+
     byte[] hashinput = Encoding.UTF8.GetBytes(saltstring + password); 
+        stopwatch.Start();
     byte[] hashoutput = iteratedSha256(hashinput, 1);
+        stopwatch.Stop();
+        TimeSpan elapsed = stopwatch.Elapsed;
+        Console.WriteLine($"Elapsed time: {elapsed.TotalSeconds}");
     return Convert.ToHexString(hashoutput);
   }
 
